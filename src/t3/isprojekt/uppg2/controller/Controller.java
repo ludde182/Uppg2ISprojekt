@@ -11,7 +11,7 @@ public class Controller {
 
 		DAL.getConn();
 		System.out.println("Conn lyckades!");
-		System.out.println(DAL.getEmployeedata());
+		System.out.println(DAL.getEmployeeData());
 
 	}
 

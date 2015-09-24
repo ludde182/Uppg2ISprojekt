@@ -13,23 +13,41 @@ public class DAL {
 
 	// -------------------- UPPGIFT 1 A + B ------------------------------//
 
-	public static ResultSet getEmployeedata() throws SQLException {
-		String getEmployee = "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM"
+	/*
+	 * public static ResultSet getEmployeedata() throws SQLException { String
+	 * getEmployee =
+	 * "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM" +
+	 * "[CRONUS SVERIGE AB$Employee];"; Statement stmt = null; stmt =
+	 * getConn().createStatement(); ResultSet rset =
+	 * stmt.executeQuery(getEmployee); ResultSetMetaData rsmd =
+	 * rset.getMetaData(); int columnCount = rsmd.getColumnCount(); while
+	 * (rset.next()) { for (int i = 1; i <= columnCount; i++) { if (i > 1) {
+	 * System.out.println(" "); String colValue = rset.getString(i);
+	 * System.out.println(rsmd.getColumnName(i) + ": " + colValue + " "); } } }
+	 * 
+	 * return rset; }
+	 */
+
+	public static ArrayList<String> getEmployeeData() throws SQLException {
+		ArrayList<String> empList = new ArrayList();
+		String getEmp = "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM"
 				+ "[CRONUS SVERIGE AB$Employee];";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
-		ResultSet rset = stmt.executeQuery(getEmployee);
+		ResultSet rset = stmt.executeQuery(getEmp);
+		ResultSetMetaData rsmd = rset.getMetaData();
 
 		while (rset.next()) {
-			String firstName = rset.getString("First Name");
-			System.out.println("First Name: " + firstName);
-		}
+			empList.add(rset.getString(1) + "" + rset.getString(2) + "" + rset.getString(3) + "" + rset.getString(4)
+					+ "" + rset.getString(5));
 
-		return rset;
+		}
+		stmt.close();
+		return empList;
 	}
 
-	public static ResultSetMetaData getEmployeeMetaData() throws SQLException {
-		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE, TABLE_CONSTRAINTS from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = [CRONUS SVERIGE AB$Employee];";
+	public static ArrayList<String> getEmployeeMetaData() throws SQLException {
+		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = [CRONUS SVERIGE AB$Rating]";
 
 		ArrayList<String> empMetaLista = new ArrayList<String>();
 		Statement stmt = null;
@@ -39,10 +57,11 @@ public class DAL {
 		ResultSetMetaData rsmd = rset.getMetaData();
 
 		while (rset.next()) {
-			empMetaLista.add(rset.getString(1) + " ");
+			empMetaLista.add(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3) + " "
+					+ rset.getString(4) + " ");
 		}
 
-		return rsmd;
+		return empMetaLista;
 	}
 
 	public static ResultSet getEmpAbsenceData() throws SQLException {
