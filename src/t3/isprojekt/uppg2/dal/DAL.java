@@ -1,38 +1,48 @@
 package t3.isprojekt.uppg2.dal;
 
 import java.sql.*;
+import java.util.*;
 
 public class DAL {
 
-	private static String connStr = "jdbc:sqlserver://Localhost;Databases=CronusDB;user=root;password=root;";
+	private static String connStr = "jdbc:sqlserver://Localhost:1433;databases=CronusDB;user=root;password=root;";
 
 	public static Connection getConn() throws SQLException {
 		return DriverManager.getConnection(connStr);
 	}
-	
-	public static ResultSet showCompany() throws SQLException {
-		Statement stmt = null; 
+
+	// -------------------- UPPGIFT 1 A + B ------------------------------//
+
+	public static ResultSet getEmployeedata() throws SQLException {
+		String getEmployee = "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM"
+				+ "[CRONUS SVERIGE AB$Employee];";
+		Statement stmt = null;
 		stmt = getConn().createStatement();
-		String sqlStr = "SELECT * FROM dbo.Company";
-		ResultSet rset = stmt.executeQuery(sqlStr);
+		ResultSet rset = stmt.executeQuery(getEmployee);
+
+		while (rset.next()) {
+			String firstName = rset.getString("First Name");
+			System.out.println("First Name: " + firstName);
+		}
+
 		return rset;
 	}
 
-	public static ResultSet findEmployeeData() throws SQLException {
-		Statement stmt; 
+	public static ResultSetMetaData getEmployeeMetaData() throws SQLException {
+		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE, TABLE_CONSTRAINTS from INFORMATION_SCHEMA.COLUMNS where TABLE_NAME = [CRONUS SVERIGE AB$Employee];";
+
+		ArrayList<String> empMetaLista = new ArrayList<String>();
+		Statement stmt = null;
 		stmt = getConn().createStatement();
-		String sqlStr = "select [No_], [First Name], [Last Name], [Initials], [Job Title] from [CRONUS Sverige AB$Employee];";
-		ResultSet rset = stmt.executeQuery(sqlStr);
-		return rset;
-	}
-	
-	public static ResultSet getEmployeedata() throws SQLException {
-		String getEmployee = "SELECT [No_], [First Name], [Last Name], [Adress], [City]" + "FROM"
-				+ "[CRONUS Sverige AB$Employee];";
-		PreparedStatement stmt = null;
-		stmt = getConn().prepareStatement(getEmployee);
-		ResultSet rset = stmt.executeQuery();
-		return rset;
+
+		ResultSet rset = stmt.executeQuery(empMetaData);
+		ResultSetMetaData rsmd = rset.getMetaData();
+
+		while (rset.next()) {
+			empMetaLista.add(rset.getString(1) + " ");
+		}
+
+		return rsmd;
 	}
 
 	public static ResultSet getEmpAbsenceData() throws SQLException {
