@@ -13,34 +13,20 @@ public class DAL {
 
 	// -------------------- UPPGIFT 1 A + B ------------------------------//
 
-	/*
-	 * public static ResultSet getEmployeedata() throws SQLException { String
-	 * getEmployee =
-	 * "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM" +
-	 * "[CRONUS SVERIGE AB$Employee];"; Statement stmt = null; stmt =
-	 * getConn().createStatement(); ResultSet rset =
-	 * stmt.executeQuery(getEmployee); ResultSetMetaData rsmd =
-	 * rset.getMetaData(); int columnCount = rsmd.getColumnCount(); while
-	 * (rset.next()) { for (int i = 1; i <= columnCount; i++) { if (i > 1) {
-	 * System.out.println(" "); String colValue = rset.getString(i);
-	 * System.out.println(rsmd.getColumnName(i) + ": " + colValue + " "); } } }
-	 * 
-	 * return rset; }
-	 */
-
 	public static ArrayList<String> getEmployeeData() throws SQLException {
 		ArrayList<String> empList = new ArrayList();
 		String getEmp = "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM"
-				+ "[CRONUS SVERIGE AB$Employee];";
+				+ "[CRONUS Sverige AB$Employee];";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmp);
 		ResultSetMetaData rsmd = rset.getMetaData();
 
 		while (rset.next()) {
-			empList.add(rset.getString(1) + "" + rset.getString(2) + "" + rset.getString(3) + "" + rset.getString(4)
-					+ "" + rset.getString(5));
-
+			empList.add(rsmd.getColumnLabel(1) + rsmd.getColumnLabel(2) + rsmd.getColumnLabel(3)
+					+ rsmd.getColumnLabel(4) + rsmd.getColumnLabel(5));
+			empList.add(
+					rset.getString(1) + rset.getString(2) + rset.getString(3) + rset.getString(4) + rset.getString(5));
 		}
 		stmt.close();
 		return empList;
