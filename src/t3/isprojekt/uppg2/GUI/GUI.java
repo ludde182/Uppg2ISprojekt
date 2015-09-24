@@ -25,7 +25,6 @@ import javax.swing.JTextPane;
 public class GUI extends JFrame {
 
 	private JPanel contentPane;
-	private ArrayList<DAL> dal = new ArrayList<DAL>();
 
 	/**
 	 * Launch the application.
