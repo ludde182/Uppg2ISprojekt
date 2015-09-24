@@ -11,67 +11,62 @@ public class DAL {
 		return DriverManager.getConnection(connStr);
 	}
 
-	// -------------------- UPPGIFT 1 A + B ------------------------------//
+	// ------ Methods for Employee & related tables ------\\
 
-	public static ArrayList<String> getEmployeeData() throws SQLException {
-		ArrayList<String> empList = new ArrayList();
-		String getEmp = "SELECT [No_], [First Name], [Last Name], [Address], [City]" + "FROM"
-				+ "[CRONUS Sverige AB$Employee];";
+	public ResultSet getEmpData() throws SQLException {
+		String getEmp = "SELECT [No_], [First Name], [Last Name], [Address], [City] FROM [CRONUS Sverige AB$Employee];";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmp);
-		ResultSetMetaData rsmd = rset.getMetaData();
-
-		while (rset.next()) {
-			empList.add(rsmd.getColumnLabel(1) + rsmd.getColumnLabel(2) + rsmd.getColumnLabel(3)
-					+ rsmd.getColumnLabel(4) + rsmd.getColumnLabel(5));
-			empList.add(
-					rset.getString(1) + rset.getString(2) + rset.getString(3) + rset.getString(4) + rset.getString(5));
-		}
-		stmt.close();
-		return empList;
-	}
-
-	public static ArrayList<String> getEmployeeMetaData() throws SQLException {
-		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = [CRONUS SVERIGE AB$Rating]";
-
-		ArrayList<String> empMetaLista = new ArrayList<String>();
-		Statement stmt = null;
-		stmt = getConn().createStatement();
-
-		ResultSet rset = stmt.executeQuery(empMetaData);
-		ResultSetMetaData rsmd = rset.getMetaData();
-
-		while (rset.next()) {
-			empMetaLista.add(rset.getString(1) + " " + rset.getString(2) + " " + rset.getString(3) + " "
-					+ rset.getString(4) + " ");
-		}
-
-		return empMetaLista;
-	}
-
-	public static ResultSet getEmpAbsenceData() throws SQLException {
-		String getEmpAbsence = "SELECT [timestamp], [Primary Key], [Search Limit], [Back End Public Key], [Back End Private Key] FROM [CRONUS Sverige AB$Employee Portal Setup]";
-		PreparedStatement stmt = null;
-		stmt = getConn().prepareStatement(getEmpAbsence);
-		ResultSet rset = stmt.executeQuery();
-		ResultSetMetaData rsmd = rset.getMetaData();
-		for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-			System.out.println(rsmd.getColumnLabel(i) + "--");
-		}
 		return rset;
 	}
 
-	public static ResultSet getEmpStatGroup() throws SQLException {
+	/*
+	 * public static ResultSet getEmployeeMetaData() throws SQLException {
+	 * String empMetaData =
+	 * "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = [CRONUS SVERIGE AB$Rating]"
+	 * ; Statement stmt = null; stmt = getConn().createStatement(); ResultSet
+	 * rset = stmt.executeQuery(empMetaData); return rset; }
+	 */
+
+	public ResultSet getEmpAbsenceData() throws SQLException {
+		String getEmpAbsence = "SELECT [timestamp], [Primary Key], [Search Limit], [Back End Public Key], [Back End Private Key] FROM [CRONUS Sverige AB$Employee Portal Setup]";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(getEmpAbsence);
+		return rset;
+	}
+
+	public ResultSet getEmpPortalSetupData() throws SQLException {
+		String getEmpPortalSetup = "SELECT [Entry No_], [Employee No_], [From Date], [To Date], [Description] from [CRONUS Sverige AB$Employee Portal Setup]";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(getEmpPortalSetup);
+		return rset;
+	}
+
+	public ResultSet getEmpQualification() throws SQLException {
+		String getEmpQual = "SELECT [Employee No_], [Qualification Code], [Cost], [Course Grade], [Employee Status] from [CRONUS Sverige AB$Employee Qualification]";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(getEmpQual);
+		return rset;
+	}
+
+	public ResultSet getEmpRelative() throws SQLException {
+		String getEmpRel = "SELECT [Relative Code], [First Name], [Last Name], [Birth Date], [Phone No_] from [CRONUS Sverige AB$Employee Relative]";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(getEmpRel);
+		return rset;
+
+	}
+
+	public ResultSet getEmpStatGroup() throws SQLException {
 		String getEmpStat = "SELECT timestamp, Code, Description FROM [CRONUS Sverige AB$Employee Statistics Group];";
-		Connection conn = null;
-		PreparedStatement stmt = null;
-		stmt = conn.prepareStatement(null);
+		Statement stmt = null;
+		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmpStat);
-		ResultSetMetaData rsmd = rset.getMetaData();
-		for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-			System.out.println(rsmd.getColumnLabel(i) + "--");
-		}
 		return rset;
 	}
 

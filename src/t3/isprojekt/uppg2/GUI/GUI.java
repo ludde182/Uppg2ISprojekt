@@ -1,6 +1,8 @@
 package t3.isprojekt.uppg2.GUI;
 
 import java.awt.BorderLayout;
+import java.sql.*;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -14,11 +16,15 @@ import javax.swing.JSplitPane;
 import java.awt.Color;
 import javax.swing.JTable;
 import java.util.*;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 public class GUI extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
 	private ArrayList<DAL> dal = new ArrayList<DAL>();
 
 	/**
@@ -36,6 +42,9 @@ public class GUI extends JFrame {
 			}
 		});
 	}
+
+	Connection con = null;
+	private JTable table;
 
 	/**
 	 * Create the frame.
@@ -55,7 +64,22 @@ public class GUI extends JFrame {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("New tab", null, panel, null);
 
-		table = new JTable();
-		tabbedPane.addTab("New tab", null, table, null);
+		JButton btnNewButton = new JButton("Magic Button");
+		btnNewButton.setBounds(201, 5, 123, 29);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				panel.setLayout(null);
+
+				table = new JTable();
+				table.setBounds(196, 19, 0, 0);
+				panel.add(table);
+				panel.add(btnNewButton);
+
+				JTextArea textArea = new JTextArea();
+				textArea.setBounds(15, 220, 494, 313);
+				panel.add(textArea);
+			}
+		});
 	}
 }
