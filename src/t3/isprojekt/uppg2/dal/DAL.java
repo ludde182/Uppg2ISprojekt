@@ -13,21 +13,29 @@ public class DAL {
 
 	// ------ Methods for Employee & related tables ------\\
 
-	public ResultSet getEmpData() throws SQLException {
+	public String[][] getEmpData() throws SQLException {
 		String getEmp = "SELECT [No_], [First Name], [Last Name], [Address], [City] FROM [CRONUS Sverige AB$Employee];";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmp);
-		return rset;
+		String[][] temp = convertRsToArray(rset, 1, 1);
+		return temp;
 	}
 
-	/*
-	 * public static ResultSet getEmployeeMetaData() throws SQLException {
-	 * String empMetaData =
-	 * "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = [CRONUS SVERIGE AB$Rating]"
-	 * ; Statement stmt = null; stmt = getConn().createStatement(); ResultSet
-	 * rset = stmt.executeQuery(empMetaData); return rset; }
-	 */
+	public static String[][] getEmployeeMetaData() throws SQLException {
+		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS]"; // WHERE
+																																		// TABLE_NAME
+																																		// //
+																																		// =
+																																		// [CRONUS
+																																		// Sverige
+																																		// AB$Rating]//";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(empMetaData);
+		String[][] temp = convertRsToArray(rset, 1, 1);
+		return temp;
+	}
 
 	public ResultSet getEmpAbsenceData() throws SQLException {
 		String getEmpAbsence = "SELECT [timestamp], [Primary Key], [Search Limit], [Back End Public Key], [Back End Private Key] FROM [CRONUS Sverige AB$Employee Portal Setup]";
@@ -70,4 +78,19 @@ public class DAL {
 		return rset;
 	}
 
+	public static String[][] convertRsToArray(ResultSet rs, int rSize, int cSize) throws SQLException {
+		int rowSize = rSize;
+		int columnSize = cSize;
+		int i = 0;
+
+		String[][] temp = new String[rowSize][columnSize];
+
+		while (rs.next() && i < rowSize) {
+			for (int j = 0; j < columnSize; j++) {
+				temp[i][j] = rs.getString(j + 1);
+			}
+			i++;
+		}
+		return temp;
+	}
 }
