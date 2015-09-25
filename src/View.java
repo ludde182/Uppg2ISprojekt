@@ -12,6 +12,9 @@ import javax.swing.table.TableModel;
 
 import t3.isprojekt.uppg2.controller.Controller;
 import t3.isprojekt.uppg2.dal.DAL;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class View extends JFrame {
 
@@ -19,8 +22,10 @@ public class View extends JFrame {
 	private DAL dal;
 	private Controller ctrl;
 	private JTable table;
-	private DefaultTableModel tableModel;
+	private DefaultTableModel tableModel = new DefaultTableModel(new Object[][] {ctrl.getEmployeeData() new Object {{ctrl.getEmpMetaData()});
 	private JTable table_1;
+	private JButton btnNewButton;
+	private JTable table_2;
 
 	/**
 	 * Launch the application.
@@ -49,19 +54,16 @@ public class View extends JFrame {
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		contentPane.setLayout(null);
 
-		TableModel model = new DefaultTableModel();
-
-		model = new DefaultTableModel();
+		JTable table = new JTable(tableModel);
+		table.setBounds(0, 65, 432, 188);
+		contentPane.add(table_2);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(5, 5, 420, 155);
-
+		scrollPane.setBounds(0, 247, 432, -175);
 		contentPane.add(scrollPane);
-		table_1 = new JTable();
-		scrollPane.setViewportView(table_1);
-	}
 
+	}
 }

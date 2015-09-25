@@ -18,16 +18,18 @@ public class DAL {
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmp);
-		String[][] temp = convertRsToArray(rset, 1, 1);
+		ResultSetMetaData rsetMeta = rset.getMetaData();
+		int colCount = rsetMeta.getColumnCount();
+		int rowCount = 0;
+		while (rset.next()) {
+			rowCount = rset.getRow();
+		}
+		String[][] temp = convertRsToArray(rset, rowCount, colCount);
 		return temp;
 	}
 
-	public static String[][] getEmployeeMetaData() throws SQLException {
-		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS]"; // WHERE
-																																		// //
-																																		// Sveri
-																																		// //
-																																		// AB$Rating]//";
+	public String[][] getEmployeeMetaData() throws SQLException {
+		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(empMetaData);
@@ -82,8 +84,7 @@ public class DAL {
 		return rset;
 	}
 
-	public static String[][] convertRsToArray(ResultSet rs, int rSize, int cSize)
-			throws SQLException {
+	public static String[][] convertRsToArray(ResultSet rs, int rSize, int cSize) throws SQLException {
 		int rowSize = rSize;
 		int columnSize = cSize;
 		int i = 0;

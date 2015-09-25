@@ -11,27 +11,66 @@ public class Controller {
 		dal = new DAL();
 	}
 
-	public ResultSet getEmpData() throws SQLException {
+	//////////////////////////////////////// UPPgift2 A, META
+	//////////////////////////////////////// controller//////////
+
+	public String[][] getEmployeeData() throws SQLException {
 		return dal.getEmpData();
 	}
 
-	public ResultSet getEmpAbscenceData() throws SQLException {
+	public String[][] getEmpMetaData() throws SQLException {
+		return dal.getEmployeeMetaData();
+	}
+
+	public String[][] getEmAbsMetaData() throws SQLException {
+		return dal.getEmployeeMetaData();
+	}
+
+	public String[][] getEmpPSMetaData() throws SQLException {
 		return dal.getEmpAbsenceData();
 	}
 
-	public ResultSet getEmpPortalSetupData() throws SQLException {
-		return dal.getEmpPortalSetupData();
+	public String[][] getEmpQualData() throws SQLException {
+		return dal.getEmpAbsenceData();
 	}
 
-	public ResultSet getEmpQualification() throws SQLException {
-		return dal.getEmpQualification();
+	public String[][] getEmpRelMetaData() throws SQLException {
+		return dal.getEmployeeRelMetaData();
 	}
 
-	public ResultSet getEmpRelative() throws SQLException {
-		return dal.getEmpRelative();
+	public String[][] getEmpSGMetaData() throws SQLException {
+		return dal.getEmpAbsenceData();
 	}
 
-	public ResultSet getEmpStatGroup() throws SQLException {
-		return dal.getEmpStatGroup();
+	/////////////////////////// uppgift 2 B controller ////////////////////
+	public String[][] getPrimaryKeys() throws SQLException {
+		return dal.getPrimaryKeys();
 	}
+
+	public String[][] getIndexes() throws SQLException {
+		return dal.getIndexes();
+	}
+
+	public String[][] getTableConstraints() throws SQLException {
+		return dal.getTableConstraints();
+	}
+
+	public String[][] getAllColumnsM1() throws SQLException {
+		return dal.getAllColumnsM1();
+	}
+
+	public String[][] getAllColumnsM2() throws SQLException {
+		return dal.getAllColumnsM2();
+	}
+
+	public String[][] getColumnsEmpM1() throws SQLException {
+		return dal.getColumnsEmpM1();
+	}
+
+	public String[][] getColumnsM2() throws SQLException {
+		return dal.getColumnsEmpM2();
+	}
+
+public ResultSet getTableMostRows() throws SQLException {
+return dal.getTableMostRows();
 }
