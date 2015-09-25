@@ -21,7 +21,6 @@ public class View extends JFrame {
 	private JTable table;
 	private DefaultTableModel tableModel;
 	private JTable table_1;
-	private String[][] headerModel = DAL.getEmployeeMetaData();
 
 	/**
 	 * Launch the application.
@@ -61,8 +60,7 @@ public class View extends JFrame {
 		scrollPane.setBounds(5, 5, 420, 155);
 
 		contentPane.add(scrollPane);
-
-		table_1 = new JTable(model);
+		table_1 = new JTable();
 		scrollPane.setViewportView(table_1);
 	}
 
