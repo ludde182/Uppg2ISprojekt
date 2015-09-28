@@ -13,37 +13,17 @@ public class DAL {
 
 	// ------ Methods for Employee & related tables ------\\
 
-	public String[][] getEmpData() throws SQLException {
-		String getEmp = "SELECT [No_], [First Name], [Last Name], [Address], [City] FROM [CRONUS Sverige AB$Employee];";
+	// Returns Employee
+	public ResultSet getEmployee() throws SQLException {
+		String getEmployee = "SELECT [No_], [First Name], [Last Name], [Address], [City] from  [CRONUS Sverige AB$Employee]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
-		ResultSet rset = stmt.executeQuery(getEmp);
-		ResultSetMetaData rsetMeta = rset.getMetaData();
-		int colCount = rsetMeta.getColumnCount();
-		int rowCount = 0;
-		while (rset.next()) {
-			rowCount = rset.getRow();
-		}
-		String[][] temp = convertRsToArray(rset, rowCount, colCount);
-		return temp;
+		ResultSet rset = stmt.executeQuery(getEmployee);
+		return rset;
 	}
 
-	public String[][] getEmployeeMetaData() throws SQLException {
-		String empMetaData = "SELECT TABLE_CATALOG, TABLE_NAME, COLUMN_NAME, DATA_TYPE FROM [CronusDB].[INFORMATION_SCHEMA].[COLUMNS]";
-		Statement stmt = null;
-		stmt = getConn().createStatement();
-		ResultSet rset = stmt.executeQuery(empMetaData);
-		ResultSetMetaData rsetMeta = rset.getMetaData();
-		int colCount = rsetMeta.getColumnCount();
-		int rowCount = 0;
-		while (rset.next()) {
-			rowCount = rset.getRow();
-		}
-		String[][] temp = convertRsToArray(rset, rowCount, colCount);
-		return temp;
-	}
-
-	public ResultSet getEmpAbsenceData() throws SQLException {
+	// Returns Employee Absence
+	public ResultSet getEmployeeAbsence() throws SQLException {
 		String getEmpAbsence = "SELECT [timestamp], [Primary Key], [Search Limit], [Back End Public Key], [Back End Private Key] FROM [CRONUS Sverige AB$Employee Portal Setup]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
@@ -51,23 +31,26 @@ public class DAL {
 		return rset;
 	}
 
-	public ResultSet getEmpPortalSetupData() throws SQLException {
-		String getEmpPortalSetup = "SELECT [Entry No_], [Employee No_], [From Date], [To Date], [Description] from [CRONUS Sverige AB$Employee Portal Setup]";
+	// Returns Employee Portal Setup
+	public ResultSet getEmployeePortalSetup() throws SQLException {
+		String getEmpPortalSetup = "SELECT timestamp, [Config Tool Pane Caption], [Back End Private Key], [Back End Public Key] [Config TP Initial Req_ Caption] FROM [CRONUS Sverige AB$Employee Portal Setup]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmpPortalSetup);
 		return rset;
 	}
 
-	public ResultSet getEmpQualification() throws SQLException {
-		String getEmpQual = "SELECT [Employee No_], [Qualification Code], [Cost], [Course Grade], [Employee Status] from [CRONUS Sverige AB$Employee Qualification]";
+	// Returns Employee Qualification
+	public ResultSet getEmployeeQualification() throws SQLException {
+		String getEmpQual = "SELECT [Qualification Code], [Employee No_], [From Date], [To Date], [Description] from [CRONUS Sverige AB$Employee Qualification]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmpQual);
 		return rset;
 	}
 
-	public ResultSet getEmpRelative() throws SQLException {
+	// Returns Employee Relative
+	public ResultSet getEmployeeRelative() throws SQLException {
 		String getEmpRel = "SELECT [Relative Code], [First Name], [Last Name], [Birth Date], [Phone No_] from [CRONUS Sverige AB$Employee Relative]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
@@ -76,27 +59,103 @@ public class DAL {
 
 	}
 
-	public ResultSet getEmpStatGroup() throws SQLException {
-		String getEmpStat = "SELECT timestamp, Code, Description FROM [CRONUS Sverige AB$Employee Statistics Group];";
+	// Returns Employee Statistics Group
+	public ResultSet getEmployeeStatisticsGroup() throws SQLException {
+		String getEmpStatGroup = "SELECT timestamp, Code, Description from [CRONUS Sverige AB$Employee Statistics Group]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
-		ResultSet rset = stmt.executeQuery(getEmpStat);
+		ResultSet rset = stmt.executeQuery(getEmpStatGroup);
+		return rset;
+
+	}
+
+	// ------ Methods for MetaData ------ \\
+
+	// Returns All Keys
+	public ResultSet getPrimaryKeys() throws SQLException {
+		String primaryKeys = "SELECT name, type_desc FROM sys.key_constraints";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(primaryKeys);
 		return rset;
 	}
 
-	public static String[][] convertRsToArray(ResultSet rs, int rSize, int cSize) throws SQLException {
-		int rowSize = rSize;
-		int columnSize = cSize;
-		int i = 0;
-
-		String[][] temp = new String[rowSize][columnSize];
-
-		while (rs.next() && i < rowSize) {
-			for (int j = 0; j < columnSize; j++) {
-				temp[i][j] = rs.getString(j + 1);
-			}
-			i++;
-		}
-		return temp;
+	// Returns All Indexes
+	public ResultSet getAllIndexes() throws SQLException {
+		String indexes = "SELECT name, type_desc FROM sys.key_constraints";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(indexes);
+		return rset;
 	}
+
+	// Returns All Indexes
+	public ResultSet getAllTableConstraints() throws SQLException {
+		String constraints = "SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(constraints);
+		return rset;
+	}
+
+	// Returns All Tables
+	public ResultSet getAllTables() throws SQLException {
+		String allTables = "SELECT * FROM INFORMATION_SCHEMA.TABLES";
+		/*
+		 * Annan lösning: "SELECT * FROM sys.tables"
+		 */
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(allTables);
+		return rset;
+	}
+
+	// Returns All Columns in Employee
+	public ResultSet getAllColumns() throws SQLException {
+		String allColumns = "SELECT * FROM [INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = [CRONUS Sverige AB$Employee]";
+		/*
+		 * Annan lösning: "sp_columns [CRONUS Sverige AB$Employee]"
+		 */
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(allColumns);
+		return rset;
+	}
+
+	// Returns Result with Most Rows
+	public ResultSet getMostRows() throws SQLException {
+		String getRows = "SELECT * FROM [INFORMATION_SCHEMA].COLUMNS WHERE [TABLE_NAME] = [CRONUS Sverige AB$Employee]";
+		Statement stmt = null;
+		stmt = getConn().createStatement();
+		ResultSet rset = stmt.executeQuery(getRows);
+		return rset;
+	}
+
+	public Vector<Vector<String>> fillTable(ResultSet r) throws SQLException {
+		ResultSetMetaData metaData = r.getMetaData();
+		int columnCount = metaData.getColumnCount();
+
+		Vector<Vector<String>> fillTable = new Vector<Vector<String>>();
+		while (r.next()) {
+			Vector<String> temp = new Vector<String>();
+			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+				temp.add(r.getString(columnIndex));
+			}
+			fillTable.add(temp);
+		}
+		return fillTable;
+	}
+
+	public Vector<String> colNames(ResultSet r) throws SQLException {
+		ResultSetMetaData metaData = r.getMetaData();
+
+		Vector<String> colNames = new Vector<String>();
+		int columnCount = metaData.getColumnCount();
+
+		for (int column = 1; column <= columnCount; column++) {
+			colNames.add(metaData.getColumnName(column));
+		}
+		return colNames;
+	}
+
 }
