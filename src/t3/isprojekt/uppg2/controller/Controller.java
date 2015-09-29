@@ -1,6 +1,7 @@
 package t3.isprojekt.uppg2.controller;
 
 import java.sql.*;
+import java.util.Vector;
 
 import t3.isprojekt.uppg2.dal.DAL;
 
@@ -11,8 +12,7 @@ public class Controller {
 		dal = new DAL();
 	}
 
-	//////////////////////////////////////// UPPgift2 A, META
-	//////////////////////////////////////// controller//////////
+	// ------ Methods for accessing DAL ------ //
 
 	public ResultSet getEmployee() throws SQLException {
 		return dal.getEmployee();
@@ -60,6 +60,19 @@ public class Controller {
 
 	public ResultSet getMostRows() throws SQLException {
 		return dal.getMostRows();
+	}
+
+	public Vector<Vector<String>> tableData(ResultSet r) throws SQLException {
+		return dal.tableData(r);
+	}
+
+	public Vector<String> colNames(ResultSet r) throws SQLException {
+		return dal.colNames(r);
+	}
+
+	// Uppg3 - opens document through DAL
+	public void openDocument(String s) {
+		dal.openDocument(s);
 	}
 
 }

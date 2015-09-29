@@ -1,5 +1,7 @@
 package t3.isprojekt.uppg2.dal;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.sql.*;
 import java.util.*;
 
@@ -14,6 +16,7 @@ public class DAL {
 	// ------ Methods for Employee & related tables ------\\
 
 	// Returns Employee
+
 	public ResultSet getEmployee() throws SQLException {
 		String getEmployee = "SELECT [No_], [First Name], [Last Name], [Address], [City] from  [CRONUS Sverige AB$Employee]";
 		Statement stmt = null;
@@ -24,7 +27,7 @@ public class DAL {
 
 	// Returns Employee Absence
 	public ResultSet getEmployeeAbsence() throws SQLException {
-		String getEmpAbsence = "SELECT [timestamp], [Primary Key], [Search Limit], [Back End Public Key], [Back End Private Key] FROM [CRONUS Sverige AB$Employee Portal Setup]";
+		String getEmpAbsence = "SELECT [Entry No_], [Employee No_], [From Date], [To Date], [Cause of Absence Code]  from [CRONUS Sverige AB$Employee Absence]";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getEmpAbsence);
@@ -73,7 +76,7 @@ public class DAL {
 
 	// Returns All Keys
 	public ResultSet getPrimaryKeys() throws SQLException {
-		String primaryKeys = "SELECT name, type_desc FROM sys.key_constraints";
+		String primaryKeys = "SELECT name, type_desc, [object_id], type FROM sys.key_constraints";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(primaryKeys);
@@ -82,14 +85,14 @@ public class DAL {
 
 	// Returns All Indexes
 	public ResultSet getAllIndexes() throws SQLException {
-		String indexes = "SELECT name, type_desc FROM sys.key_constraints";
+		String indexes = "SELECT [object_id], name, [index_id], [type_desc], [is_unique] FROM sys.indexes";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(indexes);
 		return rset;
 	}
 
-	// Returns All Indexes
+	// Returns All Table Constraints
 	public ResultSet getAllTableConstraints() throws SQLException {
 		String constraints = "SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS";
 		Statement stmt = null;
@@ -112,7 +115,7 @@ public class DAL {
 
 	// Returns All Columns in Employee
 	public ResultSet getAllColumns() throws SQLException {
-		String allColumns = "SELECT * FROM [INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = [CRONUS Sverige AB$Employee]";
+		String allColumns = "SELECT * FROM [INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = '[CRONUS Sverige AB$Employee]'";
 		/*
 		 * Annan lösning: "sp_columns [CRONUS Sverige AB$Employee]"
 		 */
@@ -124,38 +127,54 @@ public class DAL {
 
 	// Returns Result with Most Rows
 	public ResultSet getMostRows() throws SQLException {
-		String getRows = "SELECT * FROM [INFORMATION_SCHEMA].COLUMNS WHERE [TABLE_NAME] = [CRONUS Sverige AB$Employee]";
+		String getRows = "SELECT top 1 object_name(object_id) as table_name, SUM (row_count)"
+				+ "AS total_number_of_rows FROM sys.dm_db_partition_stats WHERE   (index_id=0 or index_id=1) group by object_name(object_id) order by SUM (row_count) desc";
 		Statement stmt = null;
 		stmt = getConn().createStatement();
 		ResultSet rset = stmt.executeQuery(getRows);
 		return rset;
 	}
 
-	public Vector<Vector<String>> fillTable(ResultSet r) throws SQLException {
+	// Method for extracting data from DB
+	public Vector<Vector<String>> tableData(ResultSet r) throws SQLException {
 		ResultSetMetaData metaData = r.getMetaData();
 		int columnCount = metaData.getColumnCount();
 
-		Vector<Vector<String>> fillTable = new Vector<Vector<String>>();
+		Vector<Vector<String>> tableData = new Vector<Vector<String>>();
 		while (r.next()) {
 			Vector<String> temp = new Vector<String>();
-			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-				temp.add(r.getString(columnIndex));
+			for (int i = 1; i <= columnCount; i++) {
+				temp.add(r.getString(i));
 			}
-			fillTable.add(temp);
+			tableData.add(temp);
 		}
-		return fillTable;
+		return tableData;
 	}
 
+	// Method for extracting Column Names from DB
 	public Vector<String> colNames(ResultSet r) throws SQLException {
 		ResultSetMetaData metaData = r.getMetaData();
 
 		Vector<String> colNames = new Vector<String>();
 		int columnCount = metaData.getColumnCount();
 
-		for (int column = 1; column <= columnCount; column++) {
-			colNames.add(metaData.getColumnName(column));
+		for (int i = 1; i <= columnCount; i++) {
+			colNames.add(metaData.getColumnName(i));
 		}
 		return colNames;
+	}
+
+	// Method for Opening documents
+	public void openDocument(String s) {
+		try {
+			Desktop desktop = null;
+			if (Desktop.isDesktopSupported()) {
+				desktop = Desktop.getDesktop();
+			}
+			desktop.open(new File(s));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }
