@@ -118,6 +118,7 @@ public class View extends JFrame {
 		JButton btnOpenDoc = new JButton("Open Document");
 		btnOpenDoc.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				long starttime = System.nanoTime();
 				String selectedItem = (String) documentBox.getSelectedItem();
 				String selectedFormat = (String) formatBox.getSelectedItem();
 
@@ -144,6 +145,12 @@ public class View extends JFrame {
 				if (selectedItem.equals(documents[1]) && selectedFormat.equals(docType[2])) {
 					ctrl.openDocument("C:\\Uppgift3\\Access\\Uac2.2AllaAnstellda.accdb");
 				}
+				// --- Printing response times in console --- //
+				long endtime = System.nanoTime();
+
+				long duration = ((endtime - starttime) / 1000000);
+				// DIVISIONEN gör resultatet till millisekunder
+				System.out.println("Responstid: " + duration + "ms");
 			}
 		});
 		btnOpenDoc.setBounds(15, 194, 172, 29);
@@ -256,9 +263,10 @@ public class View extends JFrame {
 
 				// --- Printing response times in console --- //
 				long endtime = System.nanoTime();
-				long duration = (endtime - starttime / 1000000);
+
+				long duration = ((endtime - starttime) / 1000000);
 				// DIVISIONEN gör resultatet till millisekunder
-				System.out.println(duration);
+				System.out.println("Responstid: " + duration + "ms");
 			}
 
 		});
