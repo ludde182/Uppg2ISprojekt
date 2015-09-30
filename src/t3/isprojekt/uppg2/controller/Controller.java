@@ -70,7 +70,7 @@ public class Controller {
 		return dal.colNames(r);
 	}
 
-	// Uppg3 - opens document through DAL
+	// ------ Uppg3 - opens document through DAL ------ //
 	public void openDocument(String s) {
 		dal.openDocument(s);
 	}

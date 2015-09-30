@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -20,8 +21,8 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTabbedPane;
 
+@SuppressWarnings("serial")
 public class View extends JFrame {
-	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private Controller ctrl = new Controller();
 	private DefaultTableModel dtm = new DefaultTableModel();
@@ -33,6 +34,10 @@ public class View extends JFrame {
 
 	private String[] documents = new String[] { "All Customers", "All Employees" };
 	private String[] docType = new String[] { "Microsoft Word", "Microsoft Excel", "Microsoft Access" };
+	private String[] extra = new String[] { "100 NOK", "Currency - Most SEK", "Address - Fotograferna AB",
+			"Employee record - Sick", "Employee Relative Info", "Andreas Berglund - Customers",
+			"Bank Accounts - Cust #10000" };
+	private String[] extraType = new String[] { "Microsoft Excel", "Microsoft Access" };
 
 	/**
 	 * Launch the application.
@@ -41,6 +46,7 @@ public class View extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 					View frame = new View();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -75,26 +81,31 @@ public class View extends JFrame {
 		panelUppg2.setLayout(null);
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(15, 83, 459, 473);
+		scrollPane.setBounds(10, 93, 464, 463);
 		panelUppg2.add(scrollPane);
 
-		table = new JTable();
+		// --- Create JTable to present DBdata --- //
+		table = new JTable() {
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 		scrollPane.setViewportView(table);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		JLabel lblSelectYourData = new JLabel("Select data");
-		lblSelectYourData.setBounds(15, 16, 62, 15);
+		JLabel lblSelectYourData = new JLabel("Select Data");
+		lblSelectYourData.setBounds(10, 21, 70, 15);
 		panelUppg2.add(lblSelectYourData);
 		lblSelectYourData.setFont(new Font("Tahoma", Font.PLAIN, 12));
 
 		// ------ Create the "Get Data" button & add ActionListener ------//
 		JButton btnShowData = new JButton("Show Data");
-		btnShowData.setBounds(313, 39, 161, 29);
+		btnShowData.setBounds(313, 47, 161, 26);
 		panelUppg2.add(btnShowData);
 
 		// ------ Create the combo box & add String[] ------//
 		JComboBox<String> comboBox = new JComboBox<String>(labels);
-		comboBox.setBounds(15, 40, 283, 26);
+		comboBox.setBounds(10, 47, 283, 26);
 		panelUppg2.add(comboBox);
 
 		JPanel panelUppg3 = new JPanel();
@@ -103,15 +114,15 @@ public class View extends JFrame {
 
 		// --- Create combo box for format type & documents & add String[] //
 		JComboBox<String> formatBox = new JComboBox<String>(docType);
-		formatBox.setBounds(15, 131, 172, 26);
+		formatBox.setBounds(10, 121, 172, 26);
 		panelUppg3.add(formatBox);
 
 		JComboBox<String> documentBox = new JComboBox<String>(documents);
-		documentBox.setBounds(15, 47, 172, 26);
+		documentBox.setBounds(10, 47, 172, 26);
 		panelUppg3.add(documentBox);
 
 		JLabel lblSelectDocument = new JLabel("Select Document");
-		lblSelectDocument.setBounds(15, 16, 138, 15);
+		lblSelectDocument.setBounds(10, 21, 138, 15);
 		lblSelectDocument.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		panelUppg3.add(lblSelectDocument);
 
@@ -121,7 +132,10 @@ public class View extends JFrame {
 				long starttime = System.nanoTime();
 				String selectedItem = (String) documentBox.getSelectedItem();
 				String selectedFormat = (String) formatBox.getSelectedItem();
-
+				/*
+				 * IF-Statements to check selected items from dropdown box and
+				 * open the correct file
+				 */
 				if (selectedItem.equals(documents[0]) && selectedFormat.equals(docType[0])) {
 					ctrl.openDocument("C:\\Uppgift3\\Uppgift2.1AllaKunder.docx");
 				}
@@ -145,21 +159,115 @@ public class View extends JFrame {
 				if (selectedItem.equals(documents[1]) && selectedFormat.equals(docType[2])) {
 					ctrl.openDocument("C:\\Uppgift3\\Access\\Uac2.2AllaAnstellda.accdb");
 				}
-				// --- Printing response times in console --- //
+				// --- Prints response-time to console in ms --- //
 				long endtime = System.nanoTime();
 
 				long duration = ((endtime - starttime) / 1000000);
-				// DIVISIONEN gör resultatet till millisekunder
+				// Division converts time to milliseconds
 				System.out.println("Responstid: " + duration + "ms");
 			}
 		});
-		btnOpenDoc.setBounds(15, 194, 172, 29);
+		btnOpenDoc.setBounds(10, 182, 172, 29);
 		panelUppg3.add(btnOpenDoc);
 
 		JLabel lblSelectDocumentType = new JLabel("Select Document Type");
 		lblSelectDocumentType.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblSelectDocumentType.setBounds(15, 100, 138, 15);
+		lblSelectDocumentType.setBounds(10, 95, 138, 15);
 		panelUppg3.add(lblSelectDocumentType);
+
+		JPanel panelExcelAccess = new JPanel();
+		tabbedPane.addTab("Extra docs", null, panelExcelAccess, null);
+		panelExcelAccess.setLayout(null);
+
+		// ComboBox for extra docs //
+		JComboBox<String> comboExtra = new JComboBox<String>(extra);
+		comboExtra.setBounds(10, 47, 185, 26);
+		panelExcelAccess.add(comboExtra);
+
+		JComboBox<String> comboBoxExtraType = new JComboBox<String>(extraType);
+		comboBoxExtraType.setBounds(10, 121, 172, 26);
+		panelExcelAccess.add(comboBoxExtraType);
+
+		JLabel label = new JLabel("Select Document");
+		label.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		label.setBounds(10, 21, 138, 15);
+		panelExcelAccess.add(label);
+
+		JLabel label_1 = new JLabel("Select Document Type");
+		label_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		label_1.setBounds(10, 95, 138, 15);
+		panelExcelAccess.add(label_1);
+
+		JButton openExtra = new JButton("Open Document");
+		openExtra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				long starttime = System.nanoTime();
+				String selectedItem = (String) comboExtra.getSelectedItem();
+				String selectedFormat = (String) comboBoxExtraType.getSelectedItem();
+				/*
+				 * IF-Statements to check selected items from dropdown box and
+				 * open the correct file
+				 */
+				if (selectedItem.equals(extra[0]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.1.xlsx");
+				}
+
+				if (selectedItem.equals(extra[0]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg11Ac.accdb");
+				}
+
+				if (selectedItem.equals(extra[1]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.2.xlsx");
+				}
+
+				if (selectedItem.equals(extra[1]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg12Ac.accdb");
+				}
+
+				if (selectedItem.equals(extra[2]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.3.xlsx");
+				}
+
+				if (selectedItem.equals(extra[2]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg13Ac.accdb");
+				}
+
+				if (selectedItem.equals(extra[3]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.4.xlsx");
+				}
+				if (selectedItem.equals(extra[3]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg14Ac.accdb");
+				}
+				if (selectedItem.equals(extra[4]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.5.xlsx");
+				}
+
+				if (selectedItem.equals(extra[4]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg15Ac.accdb");
+				}
+
+				if (selectedItem.equals(extra[5]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.6.xlsx");
+				}
+				if (selectedItem.equals(extra[5]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg16Ac.accdb");
+				}
+				if (selectedItem.equals(extra[6]) && selectedFormat.equals(extraType[0])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg1.7.xlsx");
+				}
+				if (selectedItem.equals(extra[6]) && selectedFormat.equals(extraType[1])) {
+					ctrl.openDocument("C:\\Uppgift3\\uppg17Ac.accdb");
+				}
+				// --- Prints response-time to console in ms --- //
+				long endtime = System.nanoTime();
+				long duration = ((endtime - starttime) / 1000000);
+				// Division converts time to milliseconds
+				System.out.println("Responstid: " + duration + "ms");
+
+			}
+		});
+		openExtra.setBounds(10, 182, 172, 29);
+		panelExcelAccess.add(openExtra);
 
 		btnShowData.addActionListener(new ActionListener() {
 
@@ -261,11 +369,10 @@ public class View extends JFrame {
 						e.printStackTrace();
 					}
 
-				// --- Printing response times in console --- //
+				// --- Prints response-time to console in ms --- //
 				long endtime = System.nanoTime();
-
+				// Division converts time to milliseconds
 				long duration = ((endtime - starttime) / 1000000);
-				// DIVISIONEN gör resultatet till millisekunder
 				System.out.println("Responstid: " + duration + "ms");
 			}
 

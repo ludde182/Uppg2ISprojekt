@@ -16,7 +16,6 @@ public class DAL {
 	// ------ Methods for Employee & related tables ------\\
 
 	// Returns Employee
-
 	public ResultSet getEmployee() throws SQLException {
 		String getEmployee = "SELECT [No_], [First Name], [Last Name], [Address], [City] from  [CRONUS Sverige AB$Employee]";
 		Statement stmt = null;
@@ -115,7 +114,7 @@ public class DAL {
 
 	// Returns All Columns in Employee
 	public ResultSet getAllColumns() throws SQLException {
-		String allColumns = "SELECT * FROM [INFORMATION_SCHEMA].[COLUMNS] WHERE TABLE_NAME = '[CRONUS Sverige AB$Employee]'";
+		String allColumns = "SELECT object_id, name FROM sys.columns WHERE object_id = OBJECT_ID('dbo.CRONUS Sverige AB$Employee') ";
 		/*
 		 * Annan lösning: "sp_columns [CRONUS Sverige AB$Employee]"
 		 */
